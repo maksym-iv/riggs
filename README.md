@@ -35,6 +35,21 @@ By default Riggs service will listen on `0.0.0.0:5050`. K8s Service will expose 
   kubectl apply -f deploy/k8s/
   ```  
 
+### K8s Update
+
+Due to lack of external Docker image registry for app updates we need delete currently running pod. So Update process will include following steps:
+
+* Build docker image
+  ```
+  docker build -t riggs -f deploy/Dockerfile .
+  ```
+* Deploy server
+  ```
+  kubectl delete deploy riggs
+  ```  
+
+  In future this issue is easily solved by templating `image` in k8s deployment spec., storing images in external registry, tagging by `git_commit`
+
 ### Local
 
 * Run 
