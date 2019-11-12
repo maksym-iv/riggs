@@ -106,6 +106,11 @@ func Test_Execute(t *testing.T) {
 }
 
 func Test_ExecuteErr(t *testing.T) {
+	getHttpErr := func(url string) string {
+		_, err := http.Get(url)
+		return err.Error()
+	}
+
 	testCases := []struct {
 		name string
 		geo  *Geo
@@ -114,7 +119,7 @@ func Test_ExecuteErr(t *testing.T) {
 		{
 			name: "173.177.164.160",
 			geo:  New(client, "geolocation-db.comm", "173.177.164.160"),
-			want: "Get http://geolocation-db.comm/json/173.177.164.160: dial tcp: lookup geolocation-db.comm: no such host",
+			want: getHttpErr("http://geolocation-db.comm/json/173.177.164.160"),
 		},
 	}
 

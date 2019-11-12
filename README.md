@@ -68,7 +68,7 @@ riggs cli -h
   ```
   ./riggs cli geo -ip 8.8.8.8
   ```
-* Get geo ip of self IP
+* Get geo ip of self IP (It won;t find `127.0.0.1`)
   ```
   ./riggs cli geo
   ```

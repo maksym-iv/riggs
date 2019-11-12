@@ -92,10 +92,6 @@ func (g *Geo) GetError() error {
 	return g.err
 }
 
-func (g *Geo) Error() string {
-	return g.err.Error()
-}
-
 func (g *Geo) Result() *pb.GeoResp {
 	return g.geoResp
 }
