@@ -88,8 +88,12 @@ func (g *Geo) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(jsonbody, g.geoResp)
 }
 
-func (g *Geo) Error() error {
+func (g *Geo) GetError() error {
 	return g.err
+}
+
+func (g *Geo) Error() string {
+	return g.err.Error()
 }
 
 func (g *Geo) Result() *pb.GeoResp {

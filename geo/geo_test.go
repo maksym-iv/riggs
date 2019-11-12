@@ -97,10 +97,34 @@ func Test_Execute(t *testing.T) {
 
 			tc.geo.Execute()
 
-			if err := tc.geo.Error(); err != nil {
+			if err := tc.geo.GetError(); err != nil {
 				t.Fatal(err)
 			}
 			assert.Equal(t, tc.want, tc.geo.Result(), "Should be equal")
+		})
+	}
+}
+
+func Test_ExecuteErr(t *testing.T) {
+	testCases := []struct {
+		name string
+		geo  *Geo
+		want string
+	}{
+		{
+			name: "173.177.164.160",
+			geo:  New(client, "geolocation-db.comm", "173.177.164.160"),
+			want: "Get http://geolocation-db.comm/json/173.177.164.160: dial tcp: lookup geolocation-db.comm: no such host",
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc.geo.Execute()
+			assert.EqualError(t, tc.geo.GetError(), tc.want, "Error text be equal")
 		})
 	}
 }

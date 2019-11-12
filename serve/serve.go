@@ -61,8 +61,8 @@ func (s *geoServer) GetGeo(ctx context.Context, in *pb.IPReq) (*pb.GeoResp, erro
 	g := geo.New(s.client, s.geoDb, ip)
 	g.Execute()
 
-	if g.Error() != nil {
-		return nil, g.Error()
+	if g.GetError() != nil {
+		return nil, g.GetError()
 	}
 
 	return g.Result(), nil
