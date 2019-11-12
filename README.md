@@ -43,9 +43,9 @@ Due to lack of external Docker image registry for app updates we need delete cur
   ```
   docker build -t riggs -f deploy/Dockerfile .
   ```
-* Deploy server
+* Restart pod with newly build image
   ```
-  kubectl delete deploy riggs
+  kubectl delete pod $(kubectl get pod -l app=riggs -o custom-columns=:metadata.name)
   ```  
 
   In future this issue is easily solved by templating `image` in k8s deployment spec., storing images in external registry, tagging by `git_commit`
