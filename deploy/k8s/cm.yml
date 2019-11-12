@@ -1,0 +1,10 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: riggs-config-env
+  namespace: default
+data:
+  RIGGS_LISTEN: 0.0.0.0:5050
+  RIGGS_GEO_DB: geolocation-db.com

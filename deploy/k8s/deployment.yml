@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: riggs
+  labels:
+    app: riggs
+    selector_app: riggs
+spec:
+  selector:
+    matchLabels:
+      selector_app: riggs # has to match .spec.template.metadata.labels
+  replicas: 1
+  progressDeadlineSeconds: 180
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: riggs
+        selector_app: riggs # has to match .spec.selector.matchLabels
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values:
+                        - riggs
+                topologyKey: "kubernetes.io/hostname"
+      automountServiceAccountToken: true
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: riggs
+          image: riggs
+          imagePullPolicy: IfNotPresent
+          command:
+            - ./riggs
+          args:
+            - serve
+          envFrom:
+            - configMapRef:
+                name: riggs-config-env
+          ports:
+            - containerPort: 5050
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c 
+                - grpc-health-probe -addr=${RIGGS_LISTEN}
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            periodSeconds: 5
+            successThreshold: 2
+            failureThreshold: 2
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c 
+                - grpc-health-probe -addr=${RIGGS_LISTEN}
+            initialDelaySeconds: 15
+            timeoutSeconds: 3
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - sleep 15 && pkill -QUIT -F /tmp/entrypoint.pid && sleep 44
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
