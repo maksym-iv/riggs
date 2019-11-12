@@ -1,0 +1,19 @@
+.DS_Store
+
+# IDE
+.vscode
+
+
+# TMP files
+**/tmp/*
+
+# Go
+.env
+vendor
+
+# Compiled
+riggs
+
+# Misc
+bak.tgz
+deploy

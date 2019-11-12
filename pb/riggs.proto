@@ -1,0 +1,31 @@
+syntax = "proto3";
+package riggs;
+
+
+message IPReq {
+    string ip = 1;
+}
+
+message GeoResp {
+    string country_code = 1;
+    string country_name = 2;
+    string city = 3;
+    string postal =4;
+    string latitude =5;
+    string longitude = 6;
+    string IPv4 = 7;
+    string state = 8;
+}
+
+message MorseCode{
+  string in = 1;
+  string out = 2;
+}
+
+service IPGetGeo {
+  rpc GetGeo (IPReq) returns (GeoResp);
+}
+
+service Morsify {
+  rpc MorsifyText (MorseCode) returns (MorseCode);
+}
